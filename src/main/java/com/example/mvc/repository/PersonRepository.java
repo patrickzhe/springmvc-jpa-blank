@@ -2,7 +2,6 @@ package com.example.mvc.repository;
 
 import com.example.mvc.entity.PersonInterface;
 import com.example.mvc.repository.custom.PersonRepositoryCustom;
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +22,7 @@ import java.util.concurrent.Future;
 
 @Transactional(readOnly = true)
 public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecificationExecutor<Person>,
-                PersonRepositoryCustom, QueryDslPredicateExecutor<Person> {
+                PersonRepositoryCustom {
     @Override
     Page<Person> findByNameLike(String name, Pageable pageable);
 
@@ -46,20 +44,20 @@ public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecif
     // isNull NotNull
     List<Person> readAllByFirstNameNotNull();
 
-    List<Person> findAllAddressIsNull();
+    List<Person> findAllByAddressIsNull();
 
     //And or
     List<Person> findByLastNameOrLastName(String lastName1, String lastName2);
 
     //greater less between
-    List<Person> findAllAgeGreaterThan(int age);
+    List<Person> findAllByAgeGreaterThan(int age);
 
-    List<Person> findAllAgeBetween(int age1, int age2);
+    List<Person> findAllByAgeBetween(int age1, int age2);
 
     //associated class
     List<Person> findAllByAddress_ZipCode(String zipCode);
 
-    List<Person> findAllByLastNameIgnorCase(String lastName);
+    List<Person> findAllByLastNameIgnoringCase(String lastName);
 
     //top first distinct
     Slice<Person> findTop3ByAge(int age);
@@ -70,13 +68,13 @@ public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecif
 
     //asynchronized
     @Async
-    Future<Person> findOne(String firstName);
+    Future<Person> findOneByFirstName(String firstName);
 
-    @Async
-    CompletedFuture<Person> findOneByFirstName(String firstName);
+    /*@Async 1.8
+    CompletableFuture findOneByFirstName(String firstName);*/
 
     //@Query
-    @Query("select u from User u where u.firstName = :firstName or u.lastName =:lastName" )
+    @Query("select u from Person u where u.firstName = :firstName or u.lastName =:lastName" )
     Person findByLastNameOrFirstName( @Param("lastName" ) String lastName, @Param ("firstName" ) String firstName);
 
 

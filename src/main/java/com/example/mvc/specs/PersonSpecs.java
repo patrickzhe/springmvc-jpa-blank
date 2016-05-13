@@ -2,7 +2,6 @@ package com.example.mvc.specs;
 
 import com.example.mvc.entity.Person;
 import com.example.mvc.entity.Person_;
-import com.sun.tools.javac.code.Attribute;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

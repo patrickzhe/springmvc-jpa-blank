@@ -67,10 +67,23 @@
                         </goals>
                         <configuration>
                             <outputDirectory>target/generated-sources/java</outputDirectory>
-                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                            <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysema.querydsl</groupId>
+                        <artifactId>querydsl-apt</artifactId>
+                        <version>${querydsl.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.mysema.querydsl</groupId>
+                        <artifactId>querydsl-jpa</artifactId>
+                        <classifier>apt</classifier>
+                        <version>${querydsl.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -209,11 +222,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>${org.aspectj-version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -344,19 +353,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${org.aspectj-version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-core</artifactId>
-            <version>3.6.0</version>
+            <version>${querydsl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
-            <version>3.6.0</version>
+            <version>${querydsl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
-            <version>3.6.0</version>
+            <version>${querydsl.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -376,7 +390,7 @@
         <javax.transaction.version>1.1</javax.transaction.version>
         <javax.validation.version>1.0.0.GA</javax.validation.version>
         <jp.sf.amateras.functions.version>1.1.2</jp.sf.amateras.functions.version>
-        <junit.version>4.7</junit.version>
+        <junit.version>4.9</junit.version>
         <log4j.version>1.2.16</log4j.version>
         <org.apache.maven.plugins.version>2.5</org.apache.maven.plugins.version>
         <org.apache.tomcat.maven.version>2.0-SNAPSHOT</org.apache.tomcat.maven.version>
@@ -386,7 +400,8 @@
         <org.hibernate.version>4.1.4.Final</org.hibernate.version>
         <org.lazyluke.version>0.2.7</org.lazyluke.version>
         <org.slf4j-version>1.6.2</org.slf4j-version>
-        <org.springframework-version>3.1.2.RELEASE</org.springframework-version>
+        <org.springframework-version>4.2.5.RELEASE</org.springframework-version>
         <org.springframework.data.version>1.10.0.RELEASE</org.springframework.data.version>
+        <querydsl.version>3.6.0</querydsl.version>
     </properties>
 </project>
