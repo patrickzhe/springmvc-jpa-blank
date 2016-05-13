@@ -1,0 +1,129 @@
+Sophisticated support to build repositories based on Spring and JPA
+Support for Querydsl predicates and thus type-safe JPA queries
+Transparent auditing of domain class
+Pagination support, dynamic query execution, ability to integrate custom data access code
+Validation of @Query annotated queries at bootstrap time
+Support for XML based entity mapping
+JavaConfig based repository configuration by introducing @EnableJpaRepositories.
+
+
+eclipse : http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.jpt.doc.user%2Ftasks021.htm JPA tools
+从DB 生成java model http://minuteproject.wikispaces.com/JPA2
+
+
+
+1. 介绍JPA ， spring-data 的一个模块
+是spring为了减少Dao层的code工作而抽象设计的模块， 忽略了不同的db，简化了查询的代码
+
+看一个简单的例子：
+	
+JPA 主要的几个部分
+Repository 
+	CrudRepository
+		PagingAndSortingRepository
+			JpaRepository
+		
+
+JPA 各种查询在容器启动时报错，而不是等到运行时
+查询 （在例子上演示各种）
+	naming convention:
+		使用字段名
+		interface PersonRepository extends Repository<Person, Long> {
+		List<Person> findByLastname(String lastname);
+		}
+		find…By,read…By, query…By, count…By, and get…By
+		And .. or 
+		distinct 
+		Between, LessThan, GreaterThan, Like
+		支持 IgnoreCase 条件: findByLastnameIgnoreCase(…),  两字字段findByLastnameAndFirstnameAllIgnoreCase(…)
+		orderby
+		级联对象, List<Person> findByAddressZipCode(ZipCode zipCode);  // 会引起 AddressZipCode ,  AddressZip Code ,  Address ZipCode 三次查询才能找到
+			List<Person> findByAddressZipCode(ZipCode zipCode); // use _  split 
+	Page/Sort
+		Page<User> findByLastname(String lastname, Pageable pageable);
+		Slice<User> findByLastname(String lastname, Pageable pageable);
+		List<User> findByLastname(String lastname, Sort sort);
+		List<User> findByLastname(String lastname, Pageable pageable);
+	Top/first, 同时支持distinct, 
+		User findFirstByOrderByLastnameAsc();
+		User findTopByOrderByAgeDesc();
+		Page<User> queryFirst10ByLastname(String lastname, Pageable pageable);
+		Slice<User> findDistinctTop3ByLastname(String lastname, Pageable pageable);
+		List<User> findFirst10ByLastname(String lastname, Sort sort);
+		List<User> findTop10ByLastname(String lastname, Pageable pageable);
+	支持Stream
+		@Query("select u from User u")
+		Stream<User> findAllByCustomQueryAndStream();
+		Stream<User> readAllByFirstnameNotNull();
+		@Query("select u from User u")
+		Stream<User> streamAllPaged(Pageable pageable);
+		使用
+		try (Stream<User> stream = repository.findAllByCustomQueryAndStream()) {
+		stream.forEach(…);
+		}
+	支持异步操作
+		@Async
+		Future<User> findByFirstname(String firstname); 
+		@Async
+		CompletableFuture<User> findOneByFirstname(String firstname); 
+		@Async
+		ListenableFuture<User> findOneByLastname(String lastname);
+	自己接口的集成
+		interface UserRepository extends CrudRepository<User, Long>, UserRepositoryCustom
+		{
+		// Declare query methods here
+		}
+		UserRepositoryCustom 是自己定义的interface
+	querydsl
+		使用 QueryDslPredicateExecutor 提供的方法
+		Predicate predicate = user.firstname.equalsIgnoreCase("dave").and(user.lastname.startsWithIgnoreCase("mathews"));
+		userRepository.findAll(predicate);
+
+		bind:
+		interface UserRepository extends CrudRepository<User, String>,QueryDslPredicateExecutor<User>,QuerydslBinderCustomizer<QUser> {
+		
+		@Override
+		default public void customize(QuerydslBindings bindings, QUser user) {
+				bindings.bind(user.username).first((path, value) -> path.contains(value))
+				bindings.bind(String.class).first((StringPath path, String value) -> path.containsIgnoreCase(value));
+				bindings.excluding(user.password);
+			}
+		}
+	
+	@Query
+		
+使用JPA 
+	xml: 
+		<?xml version="1.0" encoding="UTF-8"?>
+		<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+		<jpa:repositories base-package="com.acme.repositories"/>
+
+		支持filter版本
+		<repositories base-package="com.acme.repositories">
+			<context:exclude-filter type="regex" expression=".*SomeRepository" />
+		</repositories>
+	config:
+		@EnableJpaRepositories
+		class Config {}
+
+
+
+
+
+支持Mongo db
+
+
+
+
+
+
+
+
+
