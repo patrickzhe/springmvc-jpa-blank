@@ -1,4 +1,4 @@
-package com.example.mvc.repository.custom;
+package com.example.mvc.specs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
