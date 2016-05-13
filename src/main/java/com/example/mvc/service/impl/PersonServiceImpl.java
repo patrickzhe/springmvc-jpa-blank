@@ -2,6 +2,10 @@ package com.example.mvc.service.impl;
 
 import javax.inject.Inject;
 
+import com.example.mvc.repository.custom.PersonPredicate;
+import com.example.mvc.repository.custom.PersonPredicatesBuilder;
+import com.example.mvc.specs.PersonSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +18,11 @@ import com.example.mvc.entity.Person;
 import com.example.mvc.repository.PersonRepository;
 import com.example.mvc.service.PersonService;
 
+import java.util.List;
+
 @Service
 public class PersonServiceImpl implements PersonService {
-    @Inject
+    @Autowired
     protected PersonRepository personRepository;
 
     @Override
@@ -40,10 +46,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Person findById(Integer id) {
+    public Person findById(long id) {
         Person person = personRepository.findOne(id);
         return person;
     }
+
 
     @Override
     @Transactional
@@ -59,8 +66,19 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public void deleteById(Integer id) {
+    public void deleteById(long id) {
         personRepository.delete(id);
+    }
+
+    @Override public List<Person> findUnderAgeFirstNamePerson(int age, String firstName) {
+        return personRepository.findAll(PersonSpecs.isUnderAgeAndFirstNameLike(age, firstName));
+    }
+
+    @Override public List<Person> findUnderAgeFirstNamePersonByBuilder(int age, String firstName) {
+        PersonPredicatesBuilder builder = new PersonPredicatesBuilder().with("age", "<=", age).with("firstName", ":", firstName);
+
+//        Iterable<Person> ps = personRepository.findAll(builder.build());
+        return null;
     }
 
 }

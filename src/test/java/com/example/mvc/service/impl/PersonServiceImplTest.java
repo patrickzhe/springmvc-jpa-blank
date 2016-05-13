@@ -91,9 +91,9 @@ public class PersonServiceImplTest {
     @Test
     public void testFindById() {
         Person lastOne = personService.findAll(0, 1).getContent().get(0);
-        Integer id = lastOne.getId();
+        long id = lastOne.getId();
         Person p = personService.findById(id);
-        assertEquals(id, p.getId());
+        assertEquals(id, p.getId().longValue());
         assertEquals(lastOne.getName(), p.getName());
         assertEquals(lastOne.getAge(), p.getAge());
     }
@@ -108,7 +108,7 @@ public class PersonServiceImplTest {
 
         Person result = personService.insert(p);
         personRepository.flush();
-        assertEquals(Integer.valueOf(lastOne.getId() + 1), result.getId());
+        assertEquals(Long.valueOf(lastOne.getId() + 1), result.getId());
     }
 
     @Test

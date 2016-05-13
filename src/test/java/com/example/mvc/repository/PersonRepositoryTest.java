@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import javax.inject.Inject;
 
+import com.example.mvc.entity.Address;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.mvc.entity.Person;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -22,6 +27,11 @@ public class PersonRepositoryTest {
     @Inject
     PersonRepository personRepository;
 
+    private static final String[] LAST_NAMES = {"STEPHEN", "JOE", "MICKLE", "KOBE", "TIM", "DERK", "KALLY", "", "BEAST", "CJ"};
+    private static final String[] FIRST_NAMES = {"ALLAN", "JOHNSON", "BEN", "JASON", "WADE", "JORDAN", "CURRY", "JAMES", "GREEN", "MILES"};
+    private static final String[] ADDRESSS = {"WANGSHANGLU 599","BINANLU 111","JIANGNANDADAO 11","BINKANGLU 213","JIANGHUILU 123", "WANGJIANGLU 223", };
+
+    private Person testPerson = null;
     @Before
     public void setUp() {
         personRepository.deleteAll();
@@ -29,6 +39,18 @@ public class PersonRepositoryTest {
             Person p = new Person();
             p.setAge(i % 100);
             p.setName("name" + i);
+            p.setFirstName(FIRST_NAMES[new Random().nextInt(FIRST_NAMES.length)]);
+            p.setLastName(LAST_NAMES[new Random().nextInt(LAST_NAMES.length)]);
+            p.setCreationTime(new Date());
+            p.setModificationTime(new Date());
+            Address address = new Address();
+            address.setCity("Hangzhou");
+            address.setZipCode("310000");
+            address.setCity("China");
+            address.setProvince("Zhejiang");
+            address.setAddress(ADDRESSS[new Random().nextInt(ADDRESSS.length)]);
+            p.setAddress(address);
+            if (i == 1 ) testPerson = p;
             personRepository.save(p);
         }
         personRepository.flush();
@@ -51,5 +73,12 @@ public class PersonRepositoryTest {
         assertEquals(3, p.getTotalPages());
         assertEquals(11, p.getTotalElements());
     }
+
+    @Test
+    public void testGetByLastNameAndFistName() {
+        List p = personRepository.getByLastNameAndFirstName(testPerson.getLastName(), testPerson.getFirstName());
+        System.out.println(p.size());
+    }
+
 
 }

@@ -1,61 +1,54 @@
 package com.example.mvc.entity;
 
-import java.io.Serializable;
+import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "T_PERSON")
+@Table(name = "PERSON")
+@NamedQuery(name = "Person.findByFirstName", query = "SELECT p FROM Person p WHERE LOWER(p.firstName) = LOWER(?1)")
+@Data
 public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "PERSON_ID")
+    @Column(name = "id")
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
-    @Column(name = "PERSON_NAME")
+    @Column(name = "name")
     @Size(min = 1, max = 30)
     @NotNull
     private String name;
 
-    @Column(name = "AGE")
+    @Column(name = "age")
     @Min(1)
     @Max(200)
     @NotNull
     private Integer age;
 
-    public Integer getId() {
-        return id;
-    }
+    private String lastName;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private String firstName;
 
-    public String getName() {
-        return name;
-    }
+    @Column(name = "creation_time", nullable = false)
+    private Date creationTime;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Column(name = "modification_time", nullable = false)
+    private Date modificationTime;
 
-    public Integer getAge() {
-        return age;
-    }
+    @OneToOne(cascade=CascadeType.ALL)
+    private Address address;
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+    @Version
+    private long version = 0;
 
     @Override
     public String toString() {
