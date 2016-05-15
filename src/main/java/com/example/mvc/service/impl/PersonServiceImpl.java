@@ -1,5 +1,6 @@
 package com.example.mvc.service.impl;
 
+import com.example.mvc.specs.PersonPredicatesBuilder;
 import com.example.mvc.specs.PersonSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,7 +72,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override public List<Person> findUnderAgeFirstNamePersonByBuilder(int age, String firstName) {
-//        PersonPredicatesBuilder builder = new PersonPredicatesBuilder().with("age", "<=", age).with("firstName", ":", firstName);
+        PersonPredicatesBuilder builder = new PersonPredicatesBuilder().with("age", "<=", age).with("firstName", ":", firstName);
 
 //        Iterable<Person> ps = personRepository.findAll(builder.build());
         return null;

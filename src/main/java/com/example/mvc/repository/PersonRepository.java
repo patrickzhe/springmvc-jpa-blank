@@ -10,6 +10,7 @@ import com.example.mvc.entity.Person;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
@@ -22,7 +23,8 @@ import java.util.concurrent.Future;
 
 @Transactional(readOnly = true)
 public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecificationExecutor<Person>,
-                PersonRepositoryCustom {
+                PersonRepositoryCustom
+                {
     @Override
     Page<Person> findByNameLike(String name, Pageable pageable);
 
@@ -83,7 +85,7 @@ public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecif
     @Transactional
     void addAgeById(long id, int age);
 
-    // hide other person info， more deligate than sql return object[]
+    // hide other person info more deligate than sql return object[]
     PersonInterface findById(long id);
 
 

@@ -11,7 +11,7 @@ public interface PersonInterface {
 
     public String getLastName();
 
-    //composite return value SPEL ， could use regEx
+    //composite return value SPEL could use regEx
     @Value("#{target.firstName} #{target.lastName}")
     String getFullName();
 

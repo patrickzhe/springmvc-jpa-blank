@@ -1,6 +1,12 @@
 package com.example.mvc.specs;
 
+import com.example.mvc.entity.Person;
+import com.mysema.query.types.expr.BooleanExpression;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.PathBuilder;
+import com.mysema.query.types.path.StringPath;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by hzchenzhe1 on 2016/5/13.
@@ -9,8 +15,8 @@ import lombok.AllArgsConstructor;
 public class PersonPredicate {
     private SearchCriteria criteria;
 
-    /*public BooleanExpression getPredicate() {
-        PathBuilder<Person> entityPath = new PathBuilder<Person>(Person.class, "person");
+    public BooleanExpression getPredicate() {
+        PathBuilder <Person> entityPath = new PathBuilder<Person>(Person.class, "person");
 
         if (StringUtils.isNumeric(criteria.getValue().toString())) {
             NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
@@ -32,5 +38,5 @@ public class PersonPredicate {
             }
         }
         return null;
-    }*/
+    }
 }

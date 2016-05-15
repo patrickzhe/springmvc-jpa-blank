@@ -9,7 +9,7 @@ import java.util.List;
  * Created by hzchenzhe1 on 2016/5/13.
  */
 public class PersonPredicatesBuilder {
-    /*private List<SearchCriteria> params;
+    private List<SearchCriteria> params;
 
     public PersonPredicatesBuilder() {
         params = new ArrayList<SearchCriteria>();
@@ -40,5 +40,5 @@ public class PersonPredicatesBuilder {
             result = result.and(predicates.get(i));
         }
         return result;
-    }*/
+    }
 }
