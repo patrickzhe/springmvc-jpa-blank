@@ -2,6 +2,7 @@ package com.example.mvc.repository;
 
 import com.example.mvc.entity.PersonInterface;
 import com.example.mvc.repository.custom.PersonRepositoryCustom;
+import org.hibernate.metamodel.source.binder.Sortable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,8 @@ public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecif
                 {
     @Override
     Page<Person> findByNameLike(String name, Pageable pageable);
+
+    Page<Person> findByNameLike(String name, Pageable pageable, Sortable sort);
 
     //StartWith EndWith
     List<Person> findByFirstNameStartingWith(String firstNamePrefix);
@@ -62,15 +65,15 @@ public interface PersonRepository extends JpaRepository<Person, Long>, JpaSpecif
     List<Person> findAllByLastNameIgnoringCase(String lastName);
 
     //top first distinct
-    Slice<Person> findTop3ByAge(int age);
+    Slice<Person> findTop3ByOrderByAgeDesc(Pageable pageable);
 
-    Slice<Person> findFirst10ByFirstName(String firstName);
+    Person findFirstByOrderByFirstNameAsc();
 
     //stream support
 
     //asynchronized
     @Async
-    Future<Person> findOneByFirstName(String firstName);
+    Future<List<Person>> findByFirstName(String firstName);
 
     /*@Async 1.8
     CompletableFuture findOneByFirstName(String firstName);*/

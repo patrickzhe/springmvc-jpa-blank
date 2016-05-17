@@ -1,7 +1,6 @@
 package com.example.mvc.service.impl;
 
 import com.example.mvc.specs.PersonPredicatesBuilder;
-import com.example.mvc.specs.PersonSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.mvc.entity.Person;
 import com.example.mvc.repository.PersonRepository;
 import com.example.mvc.service.PersonService;
+
+import static org.springframework.data.jpa.domain.Specifications.*;
+import static com.example.mvc.specs.PersonSpecs.*;
 
 import java.util.List;
 
@@ -68,7 +70,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override public List<Person> findUnderAgeFirstNamePerson(int age, String firstName) {
-        return personRepository.findAll(PersonSpecs.isUnderAgeAndFirstNameLike(age, firstName));
+        return personRepository.findAll(where(isUnderAge(age)).and(isFirstNameLike(firstName)));
     }
 
     @Override public List<Person> findUnderAgeFirstNamePersonByBuilder(int age, String firstName) {

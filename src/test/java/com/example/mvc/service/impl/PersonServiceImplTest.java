@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.example.mvc.BaseTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,23 +27,10 @@ import com.example.mvc.service.PersonService;
 @ContextConfiguration(locations = "classpath:test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-public class PersonServiceImplTest {
-    @Inject
-    PersonRepository personRepository;
+public class PersonServiceImplTest extends BaseTest{
     @Inject
     PersonService personService;
 
-    @Before
-    public void setUp() throws Exception {
-        personRepository.deleteAll();
-        for (int i = 1; i <= 20; i++) {
-            Person p = new Person();
-            p.setAge(i % 100);
-            p.setName("name" + i);
-            personRepository.save(p);
-        }
-        personRepository.flush();
-    }
 
     @After
     public void tearDown() throws Exception {
@@ -137,4 +125,9 @@ public class PersonServiceImplTest {
         assertNull(p);
     }
 
+    @Test
+    public void testSpecs() {
+        List<Person> persons = personService.findUnderAgeFirstNamePerson(5, testPerson.getFirstName());
+        System.out.println(persons);
+    }
 }

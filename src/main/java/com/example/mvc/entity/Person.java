@@ -1,6 +1,8 @@
 package com.example.mvc.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,10 +40,10 @@ public class Person implements Serializable {
 
     private String firstName;
 
-    @Column(name = "creation_time", nullable = false)
+    @CreatedDate
     private Date creationTime;
 
-    @Column(name = "modification_time", nullable = false)
+    @LastModifiedDate
     private Date modificationTime;
 
     @OneToOne(cascade=CascadeType.ALL)
